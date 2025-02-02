@@ -7,6 +7,6 @@ import (
 
 func (s *Server) SayHello(ctx context.Context, in *pb.HelloWorldRequest) (*pb.HelloWorldResponse, error) {
 	return &pb.HelloWorldResponse{
-		Message: "Hello world",
+		Message: "Hi brother.. I fw you heavy",
 	}, nil
 }
