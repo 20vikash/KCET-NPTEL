@@ -21,20 +21,21 @@
         fileReader.onload = async e => {
             const CHUNK_SIZE = 5000
             const length = e.target.result.byteLength
+            console.log(e.target)
 
-            const chunk_count = CHUNK_SIZE / length
+            const chunk_count = length / CHUNK_SIZE
 
-            const fileName = file.name
+            const fileName = "image"
 
             for(let i = 0; i < chunk_count + 1; i++) {
                 const chunk = e.target.result.slice(i * CHUNK_SIZE, i * CHUNK_SIZE + CHUNK_SIZE)
 
-                await fetch("http://127.0.0.1:8080", {
+                await fetch("http://localhost:8080", {
                     "method": "POST",
                     "headers": {
                         "content-type": "application/octet-stream",
                         "content-length": chunk.length,
-                        // "file-name": fileName
+                        "filename": fileName
                     },
                     "body": chunk
                 })
