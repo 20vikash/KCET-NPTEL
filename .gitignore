@@ -3,3 +3,4 @@ bin
 *.json
 minIO_storage_service/minio
 .envrc
+videos

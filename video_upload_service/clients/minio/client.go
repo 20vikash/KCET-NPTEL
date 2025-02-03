@@ -20,7 +20,7 @@ func GetResponse() string {
 	defer conn.Close()
 	c := pb.NewHelloWorldServiceClient(conn)
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	r, err := c.SayHello(ctx, &pb.HelloWorldRequest{})

@@ -13,7 +13,14 @@ func (s *Server) SayHello(ctx context.Context, in *pb.HelloWorldRequest) (*pb.He
 		}, nil
 	}
 
+	err = s.minio.uploadObject(ctx, "image1", "/tmp/image1.png")
+	if err != nil {
+		return &pb.HelloWorldResponse{
+			Message: err.Error(),
+		}, nil
+	}
+
 	return &pb.HelloWorldResponse{
-		Message: "Hi brother.. I fw you heavy",
+		Message: "Successfully uploaded the image file",
 	}, nil
 }
