@@ -13,15 +13,15 @@ type MinIO struct {
 	SecretKey string
 }
 
-func (m *MinIO) connectToMinIO() (*minio.Client, error) {
-	client, err := minio.New(m.EndPoint, &minio.Options{
+func (m *MinIO) connectToMinIO() error {
+	_, err := minio.New(m.EndPoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(m.AccessKey, m.SecretKey, ""),
 		Secure: false,
 	})
 	if err != nil {
 		log.Println("Cannot connect to minio server")
-		return nil, err
+		return err
 	}
 
-	return client, nil
+	return nil
 }

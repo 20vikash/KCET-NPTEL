@@ -6,7 +6,7 @@ import (
 )
 
 func (s *Server) SayHello(ctx context.Context, in *pb.HelloWorldRequest) (*pb.HelloWorldResponse, error) {
-	_, err := s.minio.connectToMinIO()
+	err := s.minio.connectToMinIO()
 	if err != nil {
 		return &pb.HelloWorldResponse{
 			Message: err.Error(),
