@@ -1,3 +1,4 @@
 go.*
 bin
 *.json
+minIO_storage_service/minio
