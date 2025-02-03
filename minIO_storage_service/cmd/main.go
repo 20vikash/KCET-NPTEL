@@ -15,8 +15,16 @@ func main() {
 		log.Println("Cannot listen on 6969 bitch")
 	}
 
+	server := &Server{
+		minio: MinIO{
+			EndPoint:  "localhost:9000",
+			AccessKey: loadMinIOAccessKey(),
+			SecretKey: loadMinIOSecretKey(),
+		},
+	}
+
 	s := grpc.NewServer()
-	pb.RegisterHelloWorldServiceServer(s, &Server{})
+	pb.RegisterHelloWorldServiceServer(s, server)
 
 	if err := s.Serve(lis); err != nil {
 		log.Println("Failed to serve grpc server")

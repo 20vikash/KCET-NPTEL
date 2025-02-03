@@ -4,4 +4,5 @@ import pb "minio/grpc/minio"
 
 type Server struct {
 	pb.UnimplementedHelloWorldServiceServer
+	minio MinIO
 }
