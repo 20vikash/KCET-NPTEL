@@ -1,12 +1,16 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
-	"video_upload/clients/minio"
 )
 
 func rootPage(w http.ResponseWriter, r *http.Request) {
-	res := minio.GetResponse()
+	// res := minio.GetResponse()
+	// fileName := r.Header.Get("file-name")
+	body := r.Body
 
-	w.Write([]byte(res))
+	fmt.Println(body)
+
+	// w.Write([]byte(res))
 }
