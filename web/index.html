@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="file" id="f">
+    <button id="btnUpload">Upload</button>
+</body>
+
+<script>
+    const btnUpload = document.getElementById("btnUpload")
+    const f = document.getElementById("f")
+
+    btnUpload.addEventListener("click", () => {
+        const fileReader = new FileReader()
+        const file = f.files[0]
+
+        fileReader.onload = async e => {
+            const CHUNK_SIZE = 5000
+            const length = e.target.result.byteLength
+
+            const chunk_count = CHUNK_SIZE / length
+
+            const fileName = file.name
+
+            for(let i = 0; i < chunk_count + 1; i++) {
+                const chunk = e.target.result.slice(i * CHUNK_SIZE, i * CHUNK_SIZE + CHUNK_SIZE)
+
+                await fetch("http://127.0.0.1:8080", {
+                    "method": "POST",
+                    "headers": {
+                        "content-type": "application/octet-stream",
+                        "content-length": chunk.length,
+                        // "file-name": fileName
+                    },
+                    "body": chunk
+                })
+            }
+        }
+
+        fileReader.readAsArrayBuffer(file)
+    })
+</script>
+
+</html>
