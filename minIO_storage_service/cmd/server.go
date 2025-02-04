@@ -3,6 +3,6 @@ package main
 import pb "minio/grpc/minio"
 
 type Server struct {
-	pb.UnimplementedHelloWorldServiceServer
+	pb.UnimplementedFileServiceServer
 	minio MinIO
 }

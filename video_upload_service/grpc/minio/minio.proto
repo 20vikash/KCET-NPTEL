@@ -4,12 +4,16 @@ option go_package = "/minio";
 
 package helloworld;
 
-service HelloWorldService {
-  rpc SayHello(HelloWorldRequest) returns (HelloWorldResponse) {}
+service FileService {
+  rpc UploadFile(FileChunk) returns (UploadStatus);
 }
 
-message HelloWorldRequest {}
+message FileChunk {
+  bytes data = 1;
+  string fileName = 2;
+  int64 chunkID = 3;
+}
 
-message HelloWorldResponse {
-  string message = 1;
+message UploadStatus {
+  bool success = 1;
 }

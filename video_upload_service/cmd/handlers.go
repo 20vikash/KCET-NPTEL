@@ -1,33 +1,28 @@
 package main
 
 import (
-	"io"
+	"bytes"
 	"log"
 	"net/http"
-	"os"
-	"path/filepath"
+	"strconv"
+	"video_upload/clients/minio"
 )
 
 func rootPage(w http.ResponseWriter, r *http.Request) {
-	// res := minio.GetResponse()
-	// fileName := r.Header.Get("file-name")
-
-	home, _ := os.UserHomeDir()
-	filePath := filepath.Join(home, "Desktop", "videos", "image.mov")
-
-	file, err := os.OpenFile(filePath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	fileName := r.Header.Get("filename")
+	chunkIdS := r.Header.Get("chunk-id")
+	chunkId, err := strconv.Atoi(chunkIdS)
 	if err != nil {
-		log.Println("Cannot open the file")
+		log.Println("Something went wrong")
 	}
-
-	defer file.Close()
 
 	body := r.Body
 
-	_, err = io.Copy(file, body)
-	if err != nil {
-		log.Println("Error. yea.. pretty much")
-	}
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(body)
+	chunk := buf.Bytes()
+
+	minio.Upload(r.Context(), chunk, fileName, int64(chunkId))
 
 	w.Write([]byte("Success"))
 }

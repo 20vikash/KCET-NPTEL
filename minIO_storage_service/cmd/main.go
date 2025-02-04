@@ -24,7 +24,7 @@ func main() {
 	}
 
 	s := grpc.NewServer()
-	pb.RegisterHelloWorldServiceServer(s, server)
+	pb.RegisterFileServiceServer(s, server)
 
 	if err := s.Serve(lis); err != nil {
 		log.Println("Failed to serve grpc server")
