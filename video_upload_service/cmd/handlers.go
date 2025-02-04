@@ -13,7 +13,7 @@ func rootPage(w http.ResponseWriter, r *http.Request) {
 	// fileName := r.Header.Get("file-name")
 
 	home, _ := os.UserHomeDir()
-	filePath := filepath.Join(home, "Desktop", "videos", "image.png")
+	filePath := filepath.Join(home, "Desktop", "videos", "image.mov")
 
 	file, err := os.OpenFile(filePath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
