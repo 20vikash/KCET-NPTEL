@@ -14,48 +14,26 @@
     const btnUpload = document.getElementById("btnUpload")
     const f = document.getElementById("f")
 
+    const CHUNK = 1000
+
     btnUpload.addEventListener("click", () => {
         const fileReader = new FileReader()
         const file = f.files[0]
 
         fileReader.onload = async e => {
-            const CHUNK_SIZE = 4000 * 1024
+            const CHUNK_SIZE = CHUNK * 1024
             const length = e.target.result.byteLength
-            console.log(e.target)
+            const chunk_count = CHUNK_SIZE / length
+            const fileName = file.name
 
-            let chunk_count
-
-            if (length < CHUNK_SIZE) {
-                chunk_count = 0
-            } else {
-                chunk_count = length / CHUNK_SIZE
-                chunk_count += 1
-            }
-
-            chunk_count = Math.floor(chunk_count)
-
-            console.log("len: ", length)
-            console.log("clen: ", CHUNK_SIZE)
-            console.log("count: ", chunk_count)
-
-            const fileName = "image"
-            let done = false
-
-            for(let i = 0; i < chunk_count; i++) {
+            for(let i = 0; i < chunk_count + 1; i++) {
                 const chunk = e.target.result.slice(i * CHUNK_SIZE, i * CHUNK_SIZE + CHUNK_SIZE)
-                
-                if (i == chunk_count - 1) {
-                    done = true
-                }
-
-                await fetch("http://localhost:8080", {
+                await fetch("http://127.0.0.1:8080", {
                     "method": "POST",
                     "headers": {
                         "content-type": "application/octet-stream",
                         "content-length": chunk.length,
-                        "filename": fileName,
-                        "chunk-id": String(i),
-                        "done": done
+                        // "file-name": fileName
                     },
                     "body": chunk
                 })
