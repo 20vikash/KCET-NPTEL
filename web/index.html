@@ -23,21 +23,34 @@
         fileReader.onload = async e => {
             const CHUNK_SIZE = CHUNK * 1024
             const length = e.target.result.byteLength
-            const chunk_count = CHUNK_SIZE / length
+            const chunk_count = length / CHUNK_SIZE
             const fileName = file.name
 
             for(let i = 0; i < chunk_count + 1; i++) {
                 const chunk = e.target.result.slice(i * CHUNK_SIZE, i * CHUNK_SIZE + CHUNK_SIZE)
+                console.log(chunk_count)
                 await fetch("http://127.0.0.1:8080", {
                     "method": "POST",
                     "headers": {
                         "content-type": "application/octet-stream",
                         "content-length": chunk.length,
+                        "done": false,
                         // "file-name": fileName
                     },
                     "body": chunk
                 })
             }
+
+            await fetch("http://127.0.0.1:8080", {
+                    "method": "POST",
+                    "headers": {
+                        "content-type": "application/octet-stream",
+                        "content-length": Object.length,
+                        "done": true,
+                        // "file-name": fileName
+                    },
+                    "body": {}
+                })
         }
 
         fileReader.readAsArrayBuffer(file)
