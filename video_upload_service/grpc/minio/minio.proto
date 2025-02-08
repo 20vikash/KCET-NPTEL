@@ -12,6 +12,7 @@ message FileChunk {
   bytes data = 1;
   string fileName = 2;
   int64 chunkID = 3;
+  bool done = 4;
 }
 
 message UploadStatus {
