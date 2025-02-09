@@ -8,11 +8,15 @@
 <body>
     <input type="file" id="f">
     <button id="btnUpload">Upload</button>
+
+    <h2>Progress</h2>
+    <p id="progress">0%</p>
 </body>
 
 <script>
     const btnUpload = document.getElementById("btnUpload")
     const f = document.getElementById("f")
+    const progress = document.getElementById("progress")
 
     const CHUNK = 1000
 
@@ -39,6 +43,8 @@
                     },
                     "body": chunk
                 })
+
+                progress.textContent = String(Math.floor(i / chunk_count) * 100) + "%"
             }
 
             await fetch("http://127.0.0.1:8080", {
