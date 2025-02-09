@@ -8,7 +8,7 @@ import (
 
 func ConvertToHls(path string) {
 	inputFile := path
-	outputDir := "../../web/videos/"
+	outputDir := "/Users/ssvikash_20/Documents/kk/web/videos/"
 
 	if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
 		fmt.Println("Error creating output directory:", err)
@@ -30,7 +30,7 @@ func ConvertToHls(path string) {
 		"-var_stream_map", "v:0,a:0,name:720p-4M v:1,a:1,name:480p-2M v:2,a:2,name:240p-500k",
 		"-hls_list_size", "0", "-hls_time", "2",
 		"-hls_segment_filename", outputDir+"adaptive-%v-%03d.ts",
-		"-master_pl_name", outputDir+"adaptive.m3u8", outputDir+"adaptive-%v.m3u8",
+		"-master_pl_name", "adaptive.m3u8", outputDir+"adaptive-%v.m3u8",
 	)
 
 	err := cmd.Run()

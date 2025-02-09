@@ -15,7 +15,7 @@ func rootPage(w http.ResponseWriter, r *http.Request) {
 	isDone, _ := strconv.ParseBool(done)
 
 	home, _ := os.UserHomeDir()
-	filePath := filepath.Join(home, "Desktop", "videos", "image.mov")
+	filePath := filepath.Join(home, "Desktop", "videos", "image.mp4")
 	file, err := os.OpenFile(filePath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Println("Cannot open the file")

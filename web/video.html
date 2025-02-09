@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Player</title>
+  </head>
+  <body>
+    <video style="width:100%;height:100%" autoplay muted controls id="video"></video>
+  </body>
+
+  <script src="//cdn.jsdelivr.net/npm/hls.js@1"></script>
+  <script>
+    const video = document.getElementById("video")
+
+    if (Hls.isSupported()) {
+        console.log("Hello hls")
+    }
+
+    var hls = new Hls()
+
+    hls.on(Hls.Events.MEDIA_ATTACHED, function() {
+        console.log("hls.js and video are binded")
+    })
+
+    hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+      console.log(
+        'manifest loaded, found ' + data.levels.length + ' quality level',
+      )
+    })
+    
+    hls.loadSource("http://localhost/videos/adaptive.m3u8")
+
+    hls.attachMedia(video)
+
+  </script>
+</html>
