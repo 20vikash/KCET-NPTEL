@@ -1,6 +1,7 @@
 package db
 
 import (
+	"authentication/models"
 	"context"
 	"fmt"
 	"log"
@@ -26,6 +27,6 @@ func (p *PG) Connect(ctx context.Context) *pgx.Conn {
 	return conn
 }
 
-func (p *PG) CreateUser(ctx context.Context) bool {
+func (p *PG) CreateUser(ctx context.Context, user models.User) bool {
 	return false
 }
