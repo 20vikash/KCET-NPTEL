@@ -15,7 +15,7 @@ import (
 type Application struct {
 	pb.UnimplementedHelloWorldServiceServer
 	Port  string
-	Store store.Store
+	Store *store.Store
 }
 
 func main() {
@@ -26,9 +26,14 @@ func main() {
 		Database: helper.GetDBName(),
 	}
 
+	conn, err := pg.Connect(context.Background())
+	if err != nil {
+		log.Panic(err)
+	}
+
 	app := &Application{
 		Port:  ":5001",
-		Store: pg,
+		Store: store.NewStore(conn),
 	}
 
 	lis, err := net.Listen("tcp", app.Port)

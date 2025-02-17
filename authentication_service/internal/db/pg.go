@@ -1,10 +1,8 @@
 package db
 
 import (
-	"authentication/models"
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/jackc/pgx/v5"
 )
@@ -16,17 +14,13 @@ type PG struct {
 	Database string
 }
 
-func (p *PG) Connect(ctx context.Context) *pgx.Conn {
+func (p *PG) Connect(ctx context.Context) (*pgx.Conn, error) {
 	pgUrl := fmt.Sprintf("postgres://%s:%s@%s:5432/%s", p.Username, p.Password, p.Host, p.Database)
 
 	conn, err := pgx.Connect(ctx, pgUrl)
 	if err != nil {
-		log.Panic("Cannot connect to the database")
+		return nil, err
 	}
 
-	return conn
-}
-
-func (p *PG) CreateUser(ctx context.Context, user models.User) bool {
-	return false
+	return conn, nil
 }
