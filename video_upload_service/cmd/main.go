@@ -4,21 +4,23 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
+	pb "video_upload/grpc/client/auth"
 )
 
 type Application struct {
-	Port    string
-	Handler *chi.Mux
+	Port        string
+	AuthService pb.AuthServiceClient
 }
 
 func main() {
 	app := &Application{
-		Port:    ":8080",
-		Handler: handleRoutes(),
+		Port:        ":8080",
+		AuthService: pb.ConnectToAuth(),
 	}
 
-	err := http.ListenAndServe(app.Port, app.Handler)
+	mux := app.handleRoutes()
+
+	err := http.ListenAndServe(app.Port, mux)
 	if err != nil {
 		log.Println("Something went wrong in spinning up the server")
 	}
