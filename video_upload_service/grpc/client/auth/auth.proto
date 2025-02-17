@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option go_package = "/auth";
+
+package auth;
+
+service AuthService {
+  rpc CreateUser(UserDetails) returns (AuthResponse) {}
+}
+
+message UserDetails {
+  string email = 1;
+  string user_name = 2;
+  string password = 3;
+}
+
+message AuthResponse {
+  string message = 1;
+}
