@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"time"
 	"video_upload/grpc/client/auth"
 )
 
@@ -47,7 +48,8 @@ type User struct {
 }
 
 func (app *Application) CreateUser(w http.ResponseWriter, r *http.Request) {
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -68,7 +70,7 @@ func (app *Application) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	_, err = app.AuthService.CreateUser(ctx, user_)
 	if err != nil {
-		log.Panic("Cannot create an user")
+		log.Panic(err)
 	} else {
 		log.Println("Created an user")
 	}

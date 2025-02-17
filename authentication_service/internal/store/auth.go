@@ -18,9 +18,9 @@ func (a *AuthStore) CreateUser(ctx context.Context, user models.User) bool {
 
 	sql := "INSERT INTO auth (email, user_name, password_hash) VALUES($1, $2, $3)"
 
-	_, err := a.db.Query(ctx, sql, user.Email, user.UserName, password)
+	_, err := a.db.Exec(ctx, sql, user.Email, user.UserName, password)
 	if err != nil {
-		log.Panic("Cannot insert a new user")
+		log.Panic(err)
 		return false
 	}
 

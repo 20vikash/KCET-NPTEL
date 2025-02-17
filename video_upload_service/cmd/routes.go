@@ -14,6 +14,7 @@ func (app *Application) handleRoutes() *chi.Mux {
 	r.Use(corsMiddleware)
 
 	r.Post("/", app.rootPage)
+	r.Post("/signup", app.CreateUser)
 
 	return r
 }

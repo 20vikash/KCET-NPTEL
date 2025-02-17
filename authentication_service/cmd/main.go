@@ -8,6 +8,7 @@ import (
 	"context"
 	"log"
 	"net"
+	"time"
 
 	"google.golang.org/grpc"
 )
@@ -26,7 +27,10 @@ func main() {
 		Database: helper.GetDBName(),
 	}
 
-	conn, err := pg.Connect(context.Background())
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	conn, err := pg.Connect(ctx)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -42,7 +46,7 @@ func main() {
 	}
 
 	s := grpc.NewServer()
-	pb.RegisterAuthServiceServer(s, &Application{})
+	pb.RegisterAuthServiceServer(s, app)
 	log.Printf("gRPC server listening at %s", app.Port)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("Failed to server auth service: %v", err)

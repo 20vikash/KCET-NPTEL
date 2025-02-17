@@ -12,7 +12,6 @@ func ConnectToAuth() AuthServiceClient {
 	if err != nil {
 		log.Panic("Failed to connect to auth service")
 	}
-	defer conn.Close()
 
 	c := NewAuthServiceClient(conn)
 
