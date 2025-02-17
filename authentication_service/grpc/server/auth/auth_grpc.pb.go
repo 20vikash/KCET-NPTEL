@@ -19,101 +19,101 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	HelloWorldService_SayHello_FullMethodName = "/helloworld.HelloWorldService/SayHello"
+	AuthService_CreateUser_FullMethodName = "/auth.AuthService/CreateUser"
 )
 
-// HelloWorldServiceClient is the client API for HelloWorldService service.
+// AuthServiceClient is the client API for AuthService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type HelloWorldServiceClient interface {
-	SayHello(ctx context.Context, in *HelloWorldRequest, opts ...grpc.CallOption) (*HelloWorldResponse, error)
+type AuthServiceClient interface {
+	CreateUser(ctx context.Context, in *UserDetails, opts ...grpc.CallOption) (*AuthResponse, error)
 }
 
-type helloWorldServiceClient struct {
+type authServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewHelloWorldServiceClient(cc grpc.ClientConnInterface) HelloWorldServiceClient {
-	return &helloWorldServiceClient{cc}
+func NewAuthServiceClient(cc grpc.ClientConnInterface) AuthServiceClient {
+	return &authServiceClient{cc}
 }
 
-func (c *helloWorldServiceClient) SayHello(ctx context.Context, in *HelloWorldRequest, opts ...grpc.CallOption) (*HelloWorldResponse, error) {
+func (c *authServiceClient) CreateUser(ctx context.Context, in *UserDetails, opts ...grpc.CallOption) (*AuthResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(HelloWorldResponse)
-	err := c.cc.Invoke(ctx, HelloWorldService_SayHello_FullMethodName, in, out, cOpts...)
+	out := new(AuthResponse)
+	err := c.cc.Invoke(ctx, AuthService_CreateUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// HelloWorldServiceServer is the server API for HelloWorldService service.
-// All implementations must embed UnimplementedHelloWorldServiceServer
+// AuthServiceServer is the server API for AuthService service.
+// All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility.
-type HelloWorldServiceServer interface {
-	SayHello(context.Context, *HelloWorldRequest) (*HelloWorldResponse, error)
-	mustEmbedUnimplementedHelloWorldServiceServer()
+type AuthServiceServer interface {
+	CreateUser(context.Context, *UserDetails) (*AuthResponse, error)
+	mustEmbedUnimplementedAuthServiceServer()
 }
 
-// UnimplementedHelloWorldServiceServer must be embedded to have
+// UnimplementedAuthServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedHelloWorldServiceServer struct{}
+type UnimplementedAuthServiceServer struct{}
 
-func (UnimplementedHelloWorldServiceServer) SayHello(context.Context, *HelloWorldRequest) (*HelloWorldResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SayHello not implemented")
+func (UnimplementedAuthServiceServer) CreateUser(context.Context, *UserDetails) (*AuthResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
 }
-func (UnimplementedHelloWorldServiceServer) mustEmbedUnimplementedHelloWorldServiceServer() {}
-func (UnimplementedHelloWorldServiceServer) testEmbeddedByValue()                           {}
+func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
+func (UnimplementedAuthServiceServer) testEmbeddedByValue()                     {}
 
-// UnsafeHelloWorldServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to HelloWorldServiceServer will
+// UnsafeAuthServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AuthServiceServer will
 // result in compilation errors.
-type UnsafeHelloWorldServiceServer interface {
-	mustEmbedUnimplementedHelloWorldServiceServer()
+type UnsafeAuthServiceServer interface {
+	mustEmbedUnimplementedAuthServiceServer()
 }
 
-func RegisterHelloWorldServiceServer(s grpc.ServiceRegistrar, srv HelloWorldServiceServer) {
-	// If the following call pancis, it indicates UnimplementedHelloWorldServiceServer was
+func RegisterAuthServiceServer(s grpc.ServiceRegistrar, srv AuthServiceServer) {
+	// If the following call pancis, it indicates UnimplementedAuthServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&HelloWorldService_ServiceDesc, srv)
+	s.RegisterService(&AuthService_ServiceDesc, srv)
 }
 
-func _HelloWorldService_SayHello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HelloWorldRequest)
+func _AuthService_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserDetails)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(HelloWorldServiceServer).SayHello(ctx, in)
+		return srv.(AuthServiceServer).CreateUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: HelloWorldService_SayHello_FullMethodName,
+		FullMethod: AuthService_CreateUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(HelloWorldServiceServer).SayHello(ctx, req.(*HelloWorldRequest))
+		return srv.(AuthServiceServer).CreateUser(ctx, req.(*UserDetails))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// HelloWorldService_ServiceDesc is the grpc.ServiceDesc for HelloWorldService service.
+// AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var HelloWorldService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "helloworld.HelloWorldService",
-	HandlerType: (*HelloWorldServiceServer)(nil),
+var AuthService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "auth.AuthService",
+	HandlerType: (*AuthServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SayHello",
-			Handler:    _HelloWorldService_SayHello_Handler,
+			MethodName: "CreateUser",
+			Handler:    _AuthService_CreateUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

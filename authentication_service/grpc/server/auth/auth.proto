@@ -2,14 +2,18 @@ syntax = "proto3";
 
 option go_package = "/auth";
 
-package helloworld;
+package auth;
 
-service HelloWorldService {
-  rpc SayHello(HelloWorldRequest) returns (HelloWorldResponse) {}
+service AuthService {
+  rpc CreateUser(UserDetails) returns (AuthResponse) {}
 }
 
-message HelloWorldRequest {}
+message UserDetails {
+  string email = 1;
+  string user_name = 2;
+  string password = 3;
+}
 
-message HelloWorldResponse {
+message AuthResponse {
   string message = 1;
 }
