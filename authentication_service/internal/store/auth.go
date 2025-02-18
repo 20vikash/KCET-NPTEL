@@ -3,8 +3,10 @@ package store
 import (
 	"authentication/models"
 	"context"
-	"log"
+	"errors"
+	"fmt"
 
+	"github.com/jackc/pgconn"
 	"github.com/jackc/pgx/v5"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -19,8 +21,15 @@ func (a *AuthStore) CreateUser(ctx context.Context, user models.User) bool {
 	sql := "INSERT INTO auth (email, user_name, password_hash) VALUES($1, $2, $3)"
 
 	_, err := a.db.Exec(ctx, sql, user.Email, user.UserName, password)
+
 	if err != nil {
-		log.Panic(err)
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			if pgErr.Code == "23505" {
+				fmt.Println("Error: Duplicate entry (unique constraint violation)")
+			}
+		}
+
 		return false
 	}
 

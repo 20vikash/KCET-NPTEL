@@ -70,7 +70,7 @@ func (app *Application) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	_, err = app.AuthService.CreateUser(ctx, user_)
 	if err != nil {
-		log.Panic(err)
+		log.Println(err)
 	} else {
 		log.Println("Created an user")
 	}
