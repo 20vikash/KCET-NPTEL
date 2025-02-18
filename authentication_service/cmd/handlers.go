@@ -4,7 +4,12 @@ import (
 	pb "authentication/grpc/server/auth"
 	"authentication/models"
 	"context"
+	"crypto/sha256"
 	"errors"
+	"fmt"
+	"log"
+	"os/exec"
+	"time"
 )
 
 func (a *Application) CreateUser(ctx context.Context, user *pb.UserDetails) (*pb.AuthResponse, error) {
@@ -16,9 +21,28 @@ func (a *Application) CreateUser(ctx context.Context, user *pb.UserDetails) (*pb
 
 	ok := a.Store.Auth.CreateUser(ctx, userD)
 
-	if ok {
-		return &pb.AuthResponse{Message: "Created User"}, nil
+	if !ok {
+		return &pb.AuthResponse{Message: "Fail"}, errors.New("failed to create an user")
 	}
 
-	return &pb.AuthResponse{Message: "Fail"}, errors.New("failed to create an user")
+	a.SetToken(ctx, user.Email)
+
+	return &pb.AuthResponse{Message: "Created User"}, nil
+}
+
+func (a *Application) SetToken(ctx context.Context, email string) {
+	uuid, err := exec.Command("uuidgen").Output()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	t := email + time.Now().String() + fmt.Sprintf("%x", uuid)
+
+	h := sha256.New()
+	h.Write([]byte(t))
+	bs := h.Sum(nil)
+
+	token := fmt.Sprintf("%x", bs)
+
+	a.Store.Redis.SetEmailToken(ctx, email, token)
 }
