@@ -21,3 +21,9 @@ func (r *RedisStore) SetEmailToken(ctx context.Context, email string, token stri
 
 	return nil
 }
+
+func (r *RedisStore) GetEmailFromToken(ctx context.Context, token string) string {
+	val := r.ds.Get(ctx, token).String()
+
+	return val
+}

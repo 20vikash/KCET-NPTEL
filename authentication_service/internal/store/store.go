@@ -11,10 +11,12 @@ import (
 type Store struct {
 	Auth interface {
 		CreateUser(context.Context, models.User) bool
+		VerifyUser(ctx context.Context, email string) error
 	}
 
 	Redis interface {
 		SetEmailToken(ctx context.Context, email string, token string) error
+		GetEmailFromToken(ctx context.Context, token string) string
 	}
 }
 

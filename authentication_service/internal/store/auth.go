@@ -35,3 +35,15 @@ func (a *AuthStore) CreateUser(ctx context.Context, user models.User) bool {
 
 	return true
 }
+
+func (a *AuthStore) VerifyUser(ctx context.Context, email string) error {
+	sql := "UPDATE auth SET is_activated=true WHERE email=$1"
+
+	_, err := a.db.Exec(ctx, sql, email)
+	if err != nil {
+		fmt.Printf("Cannot verify the user with the email %s", email)
+		return err
+	}
+
+	return nil
+}
