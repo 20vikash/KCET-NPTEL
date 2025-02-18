@@ -27,17 +27,25 @@ func main() {
 		Database: env.GetDBName(),
 	}
 
+	rd := &db.RedisDB{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	conn, err := pg.Connect(ctx)
+	pgConn, err := pg.Connect(ctx)
 	if err != nil {
 		log.Panic(err)
 	}
 
+	rdConn := rd.Connect()
+
 	app := &Application{
 		Port:  ":5001",
-		Store: store.NewStore(conn),
+		Store: store.NewStore(pgConn, rdConn),
 	}
 
 	lis, err := net.Listen("tcp", app.Port)
