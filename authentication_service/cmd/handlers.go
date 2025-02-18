@@ -56,7 +56,7 @@ func (a *Application) SetToken(ctx context.Context, email string) string {
 func (a *Application) VerifyUser(ctx context.Context, token string) {
 	value := a.Store.Redis.GetEmailFromToken(ctx, token)
 
-	email := strings.Split(value, ":")[1]
+	email := strings.Split(value, ":")[2]
 
 	err := a.Store.Auth.VerifyUser(ctx, email)
 	if err != nil {
