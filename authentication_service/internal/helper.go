@@ -13,3 +13,7 @@ func GetDBPassword() string {
 func GetDBName() string {
 	return os.Getenv("DB_NAME")
 }
+
+func GetGmailAppPassword() string {
+	return os.Getenv("GMAIL_APP_PASSWORD")
+}
