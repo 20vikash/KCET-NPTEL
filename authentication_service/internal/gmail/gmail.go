@@ -3,22 +3,22 @@ package gmail
 import (
 	helper "authentication/internal"
 	"log"
-	"net/smtp"
+
+	"gopkg.in/gomail.v2"
 )
 
 func SendMail() {
-	auth := smtp.PlainAuth("", "arisivikash@gmail.com", helper.GetGmailAppPassword(), "smtp.gmail.com")
+	m := gomail.NewMessage()
 
-	to := []string{"arisivikash@gmail.com"}
+	m.SetHeader("From", "arisivikash@gmail.com")
+	m.SetHeader("To", "arisivikash@gmail.com")
+	m.SetHeader("Subject", "Hello")
 
-	msg := []byte("To: arisivikash@gmail.com\r\n" +
-		"Subject: Hello\r\n" +
-		"\r\n" +
-		"Hi\r\n")
+	m.SetBody("text/html", "<html>Click <a href='http://localhost:8080/verify'>here</a> to activate your account</html>")
 
-	err := smtp.SendMail("smtp.gmail.com:587", auth, "arisivikash@gmail.com", to, msg)
+	d := gomail.NewDialer("smtp.gmail.com", 587, "arisivikash@gmail.com", helper.GetGmailAppPassword())
 
-	if err != nil {
-		log.Fatal("Error sending email")
+	if err := d.DialAndSend(m); err != nil {
+		log.Fatal("Cannot send mail")
 	}
 }
