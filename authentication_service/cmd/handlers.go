@@ -51,3 +51,7 @@ func (a *Application) SetToken(ctx context.Context, email string) string {
 
 	return token
 }
+
+func (a *Application) VerifyUser() {
+
+}
