@@ -17,7 +17,7 @@ func SendMail(to string, token string) {
 
 	url := fmt.Sprintf("http://localhost:8080/verify?token=%s", token)
 
-	m.SetBody("text/html", fmt.Sprintf("<html>Click <a href='%s'>here</a> to activate your account</html>", url))
+	m.SetBody("text/html", fmt.Sprintf("<html>Click <a href='%s'>here</a> to activate your account. This link will expire in 1 day.</html>", url))
 
 	d := gomail.NewDialer("smtp.gmail.com", 587, "arisivikash@gmail.com", env.GetGmailAppPassword())
 
