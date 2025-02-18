@@ -14,7 +14,7 @@ type Store struct {
 	}
 
 	Redis interface {
-		SetEmailToken(context.Context)
+		SetEmailToken(context.Context, string, string) error
 	}
 }
 
