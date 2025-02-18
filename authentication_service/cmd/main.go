@@ -2,7 +2,7 @@ package main
 
 import (
 	pb "authentication/grpc/server/auth"
-	helper "authentication/internal"
+	env "authentication/internal"
 	"authentication/internal/db"
 	"authentication/internal/store"
 	"context"
@@ -22,9 +22,9 @@ type Application struct {
 func main() {
 	pg := &db.PG{
 		Host:     "localhost",
-		Username: helper.GetDBUserName(),
-		Password: helper.GetDBPassword(),
-		Database: helper.GetDBName(),
+		Username: env.GetDBUserName(),
+		Password: env.GetDBPassword(),
+		Database: env.GetDBName(),
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)

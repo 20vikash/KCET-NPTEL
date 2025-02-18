@@ -1,7 +1,7 @@
 package gmail
 
 import (
-	helper "authentication/internal"
+	env "authentication/internal"
 	"log"
 
 	"gopkg.in/gomail.v2"
@@ -16,7 +16,7 @@ func SendMail() {
 
 	m.SetBody("text/html", "<html>Click <a href='http://localhost:8080/verify'>here</a> to activate your account</html>")
 
-	d := gomail.NewDialer("smtp.gmail.com", 587, "arisivikash@gmail.com", helper.GetGmailAppPassword())
+	d := gomail.NewDialer("smtp.gmail.com", 587, "arisivikash@gmail.com", env.GetGmailAppPassword())
 
 	if err := d.DialAndSend(m); err != nil {
 		log.Fatal("Cannot send mail")
