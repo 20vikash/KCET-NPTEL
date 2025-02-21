@@ -7,7 +7,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func ConnectToAuth() VideoUploadServiceClient {
+func ConnectToVideo() VideoUploadServiceClient {
 	conn, err := grpc.NewClient("localhost:5002", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Panic("Failed to connect to auth service")
