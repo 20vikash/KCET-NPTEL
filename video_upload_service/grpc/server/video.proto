@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = "/video";
+
+package video_upload;
+
+service VideoUploadService {
+  rpc UploadBinary(VideoData) returns (Response);
+}
+
+message VideoData {
+  bytes data = 1;
+  string done = 2;
+}
+
+message Response {
+  string message = 1;
+}
