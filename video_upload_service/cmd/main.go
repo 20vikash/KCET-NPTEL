@@ -15,12 +15,12 @@ type Application struct {
 
 func main() {
 	app := &Application{
-		Port: ":5001",
+		Port: ":5002",
 	}
 
 	lis, err := net.Listen("tcp", app.Port)
 	if err != nil {
-		log.Fatalf("failed to listen on port 5001: %v", err)
+		log.Fatalf("failed to listen on port 5002: %v", err)
 	}
 
 	s := grpc.NewServer()
