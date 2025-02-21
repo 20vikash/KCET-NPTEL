@@ -1,21 +1,18 @@
 package main
 
 import (
+	"bytes"
 	"context"
-	"encoding/json"
-	"fmt"
 	"io"
 	"log"
-	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
-	"time"
-	"video_upload/grpc/client/auth"
+	pb "video_upload/grpc/server"
 )
 
-func (app *Application) rootPage(w http.ResponseWriter, r *http.Request) {
-	done := r.Header.Get("done")
+func (app *Application) UploadBinary(ctx context.Context, data *pb.VideoData) (*pb.Response, error) {
+	done := data.Done
 	isDone, _ := strconv.ParseBool(done)
 
 	home, _ := os.UserHomeDir()
@@ -25,53 +22,18 @@ func (app *Application) rootPage(w http.ResponseWriter, r *http.Request) {
 		log.Println("Cannot open the file")
 	}
 	defer file.Close()
-	body := r.Body
+	videoBytes := data.Data
+	video := bytes.NewReader(videoBytes)
 
 	if isDone {
 		ConvertToHls(filePath)
 		log.Println("Done is true")
 	}
 
-	fmt.Println(body)
-	_, err = io.Copy(file, body)
+	_, err = io.Copy(file, video)
 	if err != nil {
 		log.Println("Error. yea.. pretty much")
 	}
 
-	w.Write([]byte("Success"))
-}
-
-type User struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	UserName string `json:"user_name"`
-}
-
-func (app *Application) CreateUser(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		log.Fatal("Something went wrong")
-	}
-	defer r.Body.Close()
-
-	var user User
-	if err := json.Unmarshal(body, &user); err != nil {
-		log.Fatal("Something went wrong")
-	}
-
-	user_ := &auth.UserDetails{
-		Email:    user.Email,
-		Password: user.Password,
-		UserName: user.UserName,
-	}
-
-	_, err = app.AuthService.CreateUser(ctx, user_)
-	if err != nil {
-		log.Println(err)
-	} else {
-		log.Println("Created an user")
-	}
+	return &pb.Response{Message: "Success"}, nil
 }
