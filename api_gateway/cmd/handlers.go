@@ -72,5 +72,13 @@ func (app *Application) CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Application) VerifyUser(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 
+	token := r.URL.Query().Get("token")
+
+	_, err := app.AuthService.VerifyUser(ctx, &auth.Token{Token: token})
+	if err != nil {
+		log.Println(err)
+	}
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"authentication/grpc/server/auth"
 	pb "authentication/grpc/server/auth"
 	"authentication/internal/gmail"
 	"authentication/models"
@@ -53,13 +54,16 @@ func (a *Application) SetToken(ctx context.Context, email string) string {
 	return token
 }
 
-func (a *Application) VerifyUser(ctx context.Context, token string) {
-	value := a.Store.Redis.GetEmailFromToken(ctx, token)
+func (a *Application) VerifyUser(ctx context.Context, token *auth.Token) (*auth.VerifyResponse, error) {
+	value := a.Store.Redis.GetEmailFromToken(ctx, token.Token)
 
 	email := strings.Split(value, ":")[2]
 
 	err := a.Store.Auth.VerifyUser(ctx, email)
 	if err != nil {
 		log.Println(err)
+		return &auth.VerifyResponse{Message: false}, err
 	}
+
+	return &auth.VerifyResponse{Message: true}, nil
 }

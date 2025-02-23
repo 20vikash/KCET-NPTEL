@@ -6,6 +6,15 @@ package auth;
 
 service AuthService {
   rpc CreateUser(UserDetails) returns (AuthResponse) {}
+  rpc VerifyUser(Token) returns (VerifyResponse) {}
+}
+
+message Token {
+  string token = 1;
+}
+
+message VerifyResponse {
+  bool message = 1;
 }
 
 message UserDetails {
