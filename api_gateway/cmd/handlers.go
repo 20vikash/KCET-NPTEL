@@ -70,3 +70,7 @@ func (app *Application) CreateUser(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 }
+
+func (app *Application) VerifyUser(w http.ResponseWriter, r *http.Request) {
+
+}
