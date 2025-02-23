@@ -2,6 +2,7 @@ package store
 
 import (
 	"context"
+	"errors"
 	"log"
 	"time"
 
@@ -23,10 +24,9 @@ func (r *RedisStore) SetEmailToken(ctx context.Context, email string, token stri
 }
 
 func (r *RedisStore) DeleteEmailToken(ctx context.Context, token string) error {
-	_, err := r.ds.Del(ctx, token).Result()
-	if err != nil {
-		log.Fatal("Failed to delete the email token")
-		return err
+	res, _ := r.ds.Del(ctx, token).Result()
+	if res == 0 {
+		return errors.New("key expired")
 	}
 
 	return nil

@@ -2,7 +2,6 @@ package main
 
 import (
 	"authentication/grpc/server/auth"
-	pb "authentication/grpc/server/auth"
 	"authentication/internal/gmail"
 	"authentication/models"
 	"context"
@@ -15,7 +14,7 @@ import (
 	"time"
 )
 
-func (a *Application) CreateUser(ctx context.Context, user *pb.UserDetails) (*pb.AuthResponse, error) {
+func (a *Application) CreateUser(ctx context.Context, user *auth.UserDetails) (*auth.AuthResponse, error) {
 	userD := models.User{
 		Email:    user.Email,
 		Password: user.Password,
@@ -25,14 +24,14 @@ func (a *Application) CreateUser(ctx context.Context, user *pb.UserDetails) (*pb
 	ok := a.Store.Auth.CreateUser(ctx, userD)
 
 	if !ok {
-		return &pb.AuthResponse{Message: "Fail"}, errors.New("failed to create an user")
+		return &auth.AuthResponse{Message: "Fail"}, errors.New("failed to create an user")
 	}
 
 	token := a.SetToken(ctx, user.Email)
 
 	go gmail.SendMail(user.Email, token)
 
-	return &pb.AuthResponse{Message: "Created User"}, nil
+	return &auth.AuthResponse{Message: "Created User"}, nil
 }
 
 func (a *Application) SetToken(ctx context.Context, email string) string {
@@ -62,8 +61,13 @@ func (a *Application) VerifyUser(ctx context.Context, token *auth.Token) (*auth.
 	err := a.Store.Auth.VerifyUser(ctx, email)
 	if err != nil {
 		log.Println(err)
-		return &auth.VerifyResponse{Message: false}, err
+		return &auth.VerifyResponse{Message: "Fail"}, err
 	}
 
-	return &auth.VerifyResponse{Message: true}, nil
+	err = a.Store.Redis.DeleteEmailToken(ctx, token.Token)
+	if err != nil {
+		return &auth.VerifyResponse{Message: "Expired"}, err
+	}
+
+	return &auth.VerifyResponse{Message: "Success"}, nil
 }
