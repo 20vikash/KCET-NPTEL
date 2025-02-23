@@ -33,13 +33,12 @@
             for(let i = 0; i < chunk_count + 1; i++) {
                 const chunk = e.target.result.slice(i * CHUNK_SIZE, i * CHUNK_SIZE + CHUNK_SIZE)
                 console.log(chunk_count)
-                await fetch("http://127.0.0.1:8080", {
+                await fetch("http://localhost:8088/upload", {
                     "method": "POST",
                     "headers": {
                         "content-type": "application/octet-stream",
-                        "content-length": chunk.length,
+                        // "content-length": chunk.length,
                         "done": false,
-                        // "file-name": fileName
                     },
                     "body": chunk
                 })
@@ -47,13 +46,12 @@
                 progress.textContent = String(Math.floor(i / chunk_count) * 100) + "%"
             }
 
-            await fetch("http://127.0.0.1:8080", {
+            await fetch("http://localhost:8088/upload", {
                     "method": "POST",
                     "headers": {
                         "content-type": "application/octet-stream",
-                        "content-length": Object.length,
+                        // "content-length": Object.length,
                         "done": true,
-                        // "file-name": fileName
                     },
                     "body": {}
                 })

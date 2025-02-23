@@ -31,6 +31,7 @@ func (app *Application) UploadBinary(ctx context.Context, data *pb.VideoData) (*
 	}
 
 	_, err = io.Copy(file, video)
+	log.Println("Yes")
 	if err != nil {
 		log.Println("Error. yea.. pretty much")
 	}

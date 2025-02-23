@@ -5,6 +5,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"time"
 
 	video "gateway/grpc/client/video"
 )
@@ -13,9 +14,16 @@ func (app *Application) Hello(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Hello world"))
 }
 
-func (app *Application) UploadVideo(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (app *Application) UploadVideo(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	log.Println("Ok")
+
 	done := r.Header.Get("done")
 	data := r.Body
+
+	defer r.Body.Close()
 
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(data)
@@ -29,12 +37,11 @@ func (app *Application) UploadVideo(ctx context.Context, w http.ResponseWriter, 
 	_, err := app.VideoService.UploadBinary(ctx, videoData)
 	if err != nil {
 		log.Println(err)
-		w.Write([]byte("Success"))
 	} else {
-		w.Write([]byte("Failed"))
+		w.WriteHeader(http.StatusOK)
 	}
 }
 
-func (app *Application) CreateUser(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (app *Application) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 }

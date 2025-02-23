@@ -16,7 +16,7 @@ type Application struct {
 
 func main() {
 	app := &Application{
-		Port:         ":80",
+		Port:         ":8088",
 		AuthService:  auth.ConnectToAuth(),
 		VideoService: video.ConnectToVideo(),
 	}
@@ -25,6 +25,6 @@ func main() {
 
 	err := http.ListenAndServe(app.Port, mux)
 	if err != nil {
-		log.Println("Something went wrong in spinning up the server")
+		log.Println(err)
 	}
 }
