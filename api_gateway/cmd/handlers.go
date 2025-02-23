@@ -3,11 +3,14 @@ package main
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"log"
 	"net/http"
 	"time"
 
+	auth "gateway/grpc/client/auth"
 	video "gateway/grpc/client/video"
+	model "gateway/models/auth"
 )
 
 func (app *Application) Hello(w http.ResponseWriter, r *http.Request) {
@@ -43,5 +46,27 @@ func (app *Application) UploadVideo(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Application) CreateUser(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 
+	var user model.User
+
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r.Body)
+	body := buf.Bytes()
+
+	if err := json.Unmarshal(body, &user); err != nil {
+		log.Println(err)
+	}
+
+	userDetails := &auth.UserDetails{
+		Email:    user.Email,
+		UserName: user.UserName,
+		Password: user.Password,
+	}
+
+	_, err := app.AuthService.CreateUser(ctx, userDetails)
+	if err != nil {
+		log.Println(err)
+	}
 }
