@@ -80,5 +80,8 @@ func (app *Application) VerifyUser(w http.ResponseWriter, r *http.Request) {
 	_, err := app.AuthService.VerifyUser(ctx, &auth.Token{Token: token})
 	if err != nil {
 		log.Println(err)
+		w.Write([]byte("Cannot verify. Something went wrong"))
+	} else {
+		w.Write([]byte("Successfully verified your account."))
 	}
 }
