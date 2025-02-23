@@ -29,7 +29,7 @@ func (a *Application) CreateUser(ctx context.Context, user *pb.UserDetails) (*pb
 
 	token := a.SetToken(ctx, user.Email)
 
-	gmail.SendMail(user.Email, token)
+	go gmail.SendMail(user.Email, token)
 
 	return &pb.AuthResponse{Message: "Created User"}, nil
 }
