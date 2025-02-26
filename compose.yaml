@@ -52,7 +52,7 @@ services:
     expose:
       - 5002
     working_dir: /app/data/cmd
-    command: go run .
+    command: sh -c "apt-get update && apt-get install -y ffmpeg && go run ."
     
   gateway:
     image: golang:latest
