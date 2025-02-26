@@ -1,0 +1,72 @@
+networks:
+  kk:
+    driver: bridge
+
+services:
+  postgres:
+    image: postgres:alpine
+    container_name: postgres_db
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data:rw
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - kk
+  
+  redis:
+    image: redis:alpine
+    container_name: redis_db
+    volumes:
+      - ./redis_data:/data:rw
+    networks:
+      - kk
+  
+  auth_service:
+    image: golang:latest
+    container_name: auth_service
+    volumes:
+      - ./authentication_service:/app/data:rw
+    env_file:
+      - .envrc
+    networks:
+      - kk
+    depends_on:
+      - postgres
+      - redis
+    expose:
+      - 5001
+    working_dir: /app/data/cmd
+    command: go run .
+  
+  video_service:
+    image: golang:latest
+    container_name: video_service
+    volumes:
+      - ./video_upload_service:/app/data:rw
+    networks:
+      - kk
+    expose:
+      - 5002
+    working_dir: /app/data/cmd
+    command: go run .
+    
+  gateway:
+    image: golang:latest
+    container_name: api_gateway
+    volumes:
+      - ./api_gateway:/app/data
+    networks:
+      - kk
+    depends_on:
+      - auth_service
+      - video_service
+      - postgres
+      - redis
+    ports:
+      - "8088:8088"
+    working_dir: /app/data/cmd
+    command: go run .

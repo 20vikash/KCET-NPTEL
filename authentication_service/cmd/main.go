@@ -21,14 +21,14 @@ type Application struct {
 
 func main() {
 	pg := &db.PG{
-		Host:     "localhost",
+		Host:     "postgres_db",
 		Username: env.GetDBUserName(),
 		Password: env.GetDBPassword(),
 		Database: env.GetDBName(),
 	}
 
 	rd := &db.RedisDB{
-		Addr:     "localhost:6379",
+		Addr:     "redis_db:6379",
 		Password: "",
 		DB:       0,
 	}

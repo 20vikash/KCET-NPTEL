@@ -4,3 +4,6 @@ bin
 minIO_storage_service/minio
 .envrc
 videos
+postgres_data
+redis_data
+.env
