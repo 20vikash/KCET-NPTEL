@@ -8,7 +8,7 @@ import (
 )
 
 func ConnectToAuth() AuthServiceClient {
-	conn, err := grpc.NewClient("localhost:5001", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient("auth_service:5001", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Panic("Failed to connect to auth service")
 	}
