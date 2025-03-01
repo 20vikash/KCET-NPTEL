@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net"
+	processing "video_upload/grpc/client"
 	pb "video_upload/grpc/server"
 
 	"google.golang.org/grpc"
@@ -10,12 +11,14 @@ import (
 
 type Application struct {
 	pb.UnimplementedVideoUploadServiceServer
-	Port string
+	Port         string
+	VideoProcess processing.VideoProcessingServiceClient
 }
 
 func main() {
 	app := &Application{
-		Port: ":5002",
+		Port:         ":5002",
+		VideoProcess: processing.ConnectToVideoProcessingService(),
 	}
 
 	lis, err := net.Listen("tcp", app.Port)
