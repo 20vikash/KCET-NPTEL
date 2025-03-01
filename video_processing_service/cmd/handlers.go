@@ -9,12 +9,17 @@ import (
 )
 
 func (a *Application) ProcessVideo(ctx context.Context, vd *processing.VideoData) (*processing.Response, error) {
+	go a.HLS(vd)
+
+	return &processing.Response{Message: "Processing"}, nil
+}
+
+func (a *Application) HLS(vd *processing.VideoData) {
 	inputFile := vd.FilePath
-	outputDir := "/app/data/videos"
+	outputDir := "/app/data/videos/"
 
 	if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
 		fmt.Println("Error creating output directory:", err)
-		return &processing.Response{Message: "Failed"}, err
 	}
 
 	cmd := exec.Command("ffmpeg", "-y", "-i", inputFile,
@@ -38,9 +43,7 @@ func (a *Application) ProcessVideo(ctx context.Context, vd *processing.VideoData
 	err := cmd.Run()
 	if err != nil {
 		fmt.Println("Error executing FFmpeg:", err)
-		return &processing.Response{Message: "Failed"}, err
 	}
 
 	fmt.Println("Adaptive HLS files generated successfully in", outputDir)
-	return &processing.Response{Message: "Success"}, nil
 }
