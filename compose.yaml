@@ -47,7 +47,7 @@ services:
     container_name: video_upload_service
     volumes:
       - ./video_upload_service:/app/data:rw
-      - ./web/videos:/app/data/videos
+      - ./web/videos:/app/data/videos:rw
     networks:
       - kk
     expose:
@@ -60,7 +60,7 @@ services:
     container_name: video_processing_service
     volumes:
       - ./video_processing_service:/app/data:rw
-      - ./web/videos:/app/data/videos
+      - ./web/videos:/app/data/videos:rw
     networks:
       - kk
     expose:
@@ -77,7 +77,8 @@ services:
       - kk
     depends_on:
       - auth_service
-      - video_service
+      - video_upload_service
+      - video_processing_service
       - postgres
       - redis
     ports:

@@ -16,8 +16,7 @@ func (app *Application) UploadBinary(ctx context.Context, data *pb.VideoData) (*
 	done := data.Done
 	isDone, _ := strconv.ParseBool(done)
 
-	home, _ := os.UserHomeDir()
-	filePath := filepath.Join(home, "Documents", "kk", "web", "videos")
+	filePath := filepath.Join("/", "app", "data", "videos", "image.mp4")
 	file, err := os.OpenFile(filePath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Println("Cannot open the file")
@@ -31,7 +30,7 @@ func (app *Application) UploadBinary(ctx context.Context, data *pb.VideoData) (*
 			FilePath: filePath,
 		}
 
-		go app.VideoProcess.ProcessVideo(ctx, fileData)
+		app.VideoProcess.ProcessVideo(ctx, fileData)
 		log.Println("Done is true")
 	}
 

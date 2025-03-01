@@ -10,7 +10,7 @@ import (
 
 func (a *Application) ProcessVideo(ctx context.Context, vd *processing.VideoData) (*processing.Response, error) {
 	inputFile := vd.FilePath
-	outputDir := "/Users/ssvikash_20/Documents/kk/web/videos/"
+	outputDir := "/app/data/videos"
 
 	if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
 		fmt.Println("Error creating output directory:", err)
