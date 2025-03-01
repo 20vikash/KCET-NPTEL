@@ -8,7 +8,7 @@ import (
 )
 
 func ConnectToVideoProcessingService() VideoProcessingServiceClient {
-	conn, err := grpc.NewClient("video_process:5003", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient("video_processing_service:5003", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Panic("Failed to connect to video processing service")
 	}

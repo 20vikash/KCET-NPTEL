@@ -8,7 +8,7 @@ import (
 )
 
 func ConnectToVideo() VideoUploadServiceClient {
-	conn, err := grpc.NewClient("video_service:5002", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient("video_upload_service:5002", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Panic("Failed to connect to auth service")
 	}
