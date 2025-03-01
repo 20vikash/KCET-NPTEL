@@ -26,7 +26,7 @@ func (app *Application) UploadBinary(ctx context.Context, data *pb.VideoData) (*
 	video := bytes.NewReader(videoBytes)
 
 	if isDone {
-		ConvertToHls(filePath)
+		go ConvertToHls(filePath)
 		log.Println("Done is true")
 	}
 

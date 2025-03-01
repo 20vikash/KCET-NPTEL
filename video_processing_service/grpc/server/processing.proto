@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "/processing";
+
+package video_processing;
+
+service VideoProcessingService {
+  rpc ProcessVideo(VideoData) returns (Response);
+}
+
+message VideoData {
+  string filePath = 1;
+}
+
+message Response {
+  string message = 1;
+}
