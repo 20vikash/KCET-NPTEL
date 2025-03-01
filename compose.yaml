@@ -24,6 +24,23 @@ services:
       - ./redis_data:/data:rw
     networks:
       - kk
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - kk
+    env_file:
+      - .env
+    environment:
+      - MINIO_ROOT_USER=${MINIO_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_PASSWORD}
+    volumes:
+      - ./minio_data:/data
+    command: server --console-address ":9001" /data
   
   auth_service:
     image: golang:latest

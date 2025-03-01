@@ -7,3 +7,4 @@ videos
 postgres_data
 redis_data
 .env
+minio_data
