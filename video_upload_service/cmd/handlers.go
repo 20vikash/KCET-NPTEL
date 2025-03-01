@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	processing "video_upload/grpc/client"
 	pb "video_upload/grpc/server"
 )
 
@@ -26,7 +27,11 @@ func (app *Application) UploadBinary(ctx context.Context, data *pb.VideoData) (*
 	video := bytes.NewReader(videoBytes)
 
 	if isDone {
-		go ConvertToHls(filePath)
+		fileData := &processing.VideoData{
+			FilePath: filePath,
+		}
+
+		go app.VideoProcess.ProcessVideo(ctx, fileData)
 		log.Println("Done is true")
 	}
 
