@@ -16,7 +16,7 @@ func (a *Application) ProcessVideo(ctx context.Context, vd *processing.VideoData
 
 func (a *Application) HLS(vd *processing.VideoData) {
 	inputFile := vd.FilePath
-	outputDir := "/app/data/videos/"
+	outputDir := "/tmp/minio/"
 
 	if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
 		fmt.Println("Error creating output directory:", err)
