@@ -2,6 +2,12 @@ networks:
   kk:
     driver: bridge
 
+volumes:
+  minio_data:
+  postgres_db_data:
+  redis_db_data:
+  minio_video:
+
 services:
   postgres:
     image: postgres:alpine
@@ -12,7 +18,7 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data:rw
+      - postgres_db_data:/var/lib/postgresql/data:rw
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - kk
@@ -21,7 +27,7 @@ services:
     image: redis:alpine
     container_name: redis_db
     volumes:
-      - ./redis_data:/data:rw
+      - redis_db_data:/data:rw
     networks:
       - kk
 
@@ -36,10 +42,11 @@ services:
     env_file:
       - .env
     environment:
-      - MINIO_ROOT_USER=${MINIO_ROOT}
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+
     volumes:
-      - ./minio_data:/data
+      - minio_data:/data
     command: server --console-address ":9001" /data
   
   auth_service:
@@ -75,22 +82,26 @@ services:
   video_processing_service:
     image: golang:latest
     container_name: video_processing_service
+    privileged: true
     volumes:
       - ./video_processing_service:/app/data:rw
       - ./web/videos:/app/data/videos:rw
+      - minio_video:/tmp/minio
     env_file:
       - .env
     networks:
       - kk
     expose:
       - 5003
+    depends_on:
+      - minio
     working_dir: /app/data/cmd
     entrypoint: sh -c "
       apt-get update && apt-get install -y ffmpeg s3fs && 
       echo '${MINIO_USER_NAME}:${MINIO_USER_PASSWORD}' > /etc/passwd-s3fs &&
       chmod 600 /etc/passwd-s3fs &&
-      mkdir -p /mnt/minio &&
-      s3fs ${MINIO_BUCKET_NAME} /mnt/minio -o passwd_file=/etc/passwd-s3fs -o url=http://minio:9000 -o use_path_request_style &&
+      mkdir -p /tmp/minio &&
+      s3fs ${MINIO_BUCKET_NAME} /tmp/minio -o passwd_file=/etc/passwd-s3fs -o url=http://minio:9000 -o use_path_request_style &&
       go run ."
 
   gateway:
@@ -104,6 +115,7 @@ services:
       - auth_service
       - video_upload_service
       - video_processing_service
+      - minio
       - postgres
       - redis
     ports:
