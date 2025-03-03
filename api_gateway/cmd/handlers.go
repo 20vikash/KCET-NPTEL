@@ -11,10 +11,11 @@ import (
 	auth "gateway/grpc/client/auth"
 	video "gateway/grpc/client/video"
 	model "gateway/models/auth"
+	web "gateway/web/templates"
 )
 
 func (app *Application) Hello(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello world"))
+	web.HeaderTemplate("Vikash").Render(context.Background(), w)
 }
 
 func (app *Application) UploadVideo(w http.ResponseWriter, r *http.Request) {
