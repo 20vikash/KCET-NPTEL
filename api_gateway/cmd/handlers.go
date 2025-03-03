@@ -44,6 +44,7 @@ func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
 
 	app.SessionManager.Put(ctx, "id", res.Id)
 	app.SessionManager.Put(ctx, "user_name", res.UserName)
+	app.SessionManager.Put(ctx, "role", res.Role)
 }
 
 func (app *Application) UploadVideo(w http.ResponseWriter, r *http.Request) {
