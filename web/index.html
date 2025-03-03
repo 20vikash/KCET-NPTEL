@@ -37,7 +37,6 @@
                     "method": "POST",
                     "headers": {
                         "content-type": "application/octet-stream",
-                        // "content-length": chunk.length,
                         "done": false,
                     },
                     "body": chunk
@@ -50,7 +49,7 @@
                     "method": "POST",
                     "headers": {
                         "content-type": "application/octet-stream",
-                        // "content-length": Object.length,
+                        "file-name": file.name.split(".")[0],
                         "done": true,
                     },
                     "body": {}
