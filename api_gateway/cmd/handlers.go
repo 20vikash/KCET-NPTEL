@@ -37,10 +37,13 @@ func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
 		Password: user.Password,
 	}
 
-	_, err := app.AuthService.CreateUser(ctx, userDetails)
+	res, err := app.AuthService.LoginUser(ctx, userDetails)
 	if err != nil {
 		log.Println(err)
 	}
+
+	app.SessionManager.Put(ctx, "id", res.Id)
+	app.SessionManager.Put(ctx, "user_name", res.UserName)
 }
 
 func (app *Application) UploadVideo(w http.ResponseWriter, r *http.Request) {
