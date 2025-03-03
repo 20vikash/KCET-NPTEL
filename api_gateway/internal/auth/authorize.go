@@ -1,0 +1,5 @@
+package authorize
+
+func IsAuthorized() {
+
+}
