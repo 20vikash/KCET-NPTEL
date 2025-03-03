@@ -12,7 +12,10 @@ func (app *Application) handleRoutes() *chi.Mux {
 
 	r.Use(middleware.Logger)
 	r.Use(corsMiddleware)
+	r.Use(app.SessionManager.LoadAndSave)
 
+	r.Get("/", app.Hello)
+	r.Post("/login", app.Login)
 	r.Post("/upload", app.UploadVideo)
 	r.Post("/signup", app.CreateUser)
 	r.Get("/verify", app.VerifyUser)

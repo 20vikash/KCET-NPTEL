@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgx/v5"
@@ -46,4 +47,21 @@ func (a *AuthStore) VerifyUser(ctx context.Context, email string) error {
 	}
 
 	return nil
+}
+
+func (a *AuthStore) LoginUser(ctx context.Context, user string, password string) (bool, error) {
+	sql := "SELECT is_activated FROM auth WHERE user=$1"
+	var is_activated bool
+
+	err := a.db.QueryRow(ctx, sql, user).Scan(&is_activated)
+	if err != nil {
+		log.Println(err)
+		return false, err
+	}
+
+	if !is_activated {
+		return false, errors.New("verify")
+	}
+
+	return true, nil
 }
