@@ -19,8 +19,28 @@ func (app *Application) Hello(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
-	app.SessionManager.Put(r.Context(), "Test", "Value")
-	log.Println("Login called")
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	var user model.User
+
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r.Body)
+	body := buf.Bytes()
+
+	if err := json.Unmarshal(body, &user); err != nil {
+		log.Println(err)
+	}
+
+	userDetails := &auth.UserDetails{
+		UserName: user.UserName,
+		Password: user.Password,
+	}
+
+	_, err := app.AuthService.CreateUser(ctx, userDetails)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func (app *Application) UploadVideo(w http.ResponseWriter, r *http.Request) {
