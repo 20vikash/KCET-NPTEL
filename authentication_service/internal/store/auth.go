@@ -49,18 +49,38 @@ func (a *AuthStore) VerifyUser(ctx context.Context, email string) error {
 	return nil
 }
 
-func (a *AuthStore) LoginUser(ctx context.Context, user string, password string) (bool, error) {
-	sql := "SELECT is_activated FROM auth WHERE user=$1"
-	var is_activated bool
+func (a *AuthStore) LoginUser(ctx context.Context, email string, password string) (bool, error) {
+	sql := "SELECT is_activated FROM auth WHERE email=$1"
+	var userData models.User
 
-	err := a.db.QueryRow(ctx, sql, user).Scan(&is_activated)
+	err := a.db.QueryRow(ctx, sql, email).Scan(&userData.IsActivated)
+	if err != nil {
+		log.Println(err)
+		return false, errors.New("no")
+	}
+
+	if !userData.IsActivated {
+		return false, errors.New("verify")
+	}
+
+	sql = "SELECT id, email, user_name, password_hash, is_activated, created_at FROM auth WHERE email=$1"
+	err = a.db.QueryRow(ctx, sql, email).Scan(
+		&userData.Id,
+		&userData.Email,
+		&userData.UserName,
+		&userData.Password,
+		&userData.IsActivated,
+		&userData.Role,
+	)
 	if err != nil {
 		log.Println(err)
 		return false, err
 	}
 
-	if !is_activated {
-		return false, errors.New("verify")
+	err = bcrypt.CompareHashAndPassword([]byte(userData.Password), []byte(password))
+	if err != nil {
+		log.Println("Wrong password")
+		return false, errors.New("wrong")
 	}
 
 	return true, nil
