@@ -12,6 +12,7 @@ type Store struct {
 	Auth interface {
 		CreateUser(context.Context, models.User) bool
 		VerifyUser(ctx context.Context, email string) error
+		LoginUser(ctx context.Context, email string, password string) (*models.User, error)
 	}
 
 	Redis interface {

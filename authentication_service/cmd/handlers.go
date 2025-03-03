@@ -71,3 +71,16 @@ func (a *Application) VerifyUser(ctx context.Context, token *auth.Token) (*auth.
 
 	return &auth.VerifyResponse{Message: "Success"}, nil
 }
+
+func (a *Application) LoginUser(ctx context.Context, user *auth.UserDetails) (*auth.LoginResponse, error) {
+	userData, err := a.Store.Auth.LoginUser(ctx, user.Email, user.Password)
+
+	if err != nil {
+		return &auth.LoginResponse{
+			Id:       userData.Id,
+			UserName: user.UserName,
+		}, err
+	}
+
+	return &auth.LoginResponse{Id: userData.Id, UserName: user.UserName}, nil
+}
