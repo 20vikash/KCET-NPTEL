@@ -78,9 +78,10 @@ func (a *Application) LoginUser(ctx context.Context, user *auth.UserDetails) (*a
 	if err != nil {
 		return &auth.LoginResponse{
 			Id:       userData.Id,
-			UserName: user.UserName,
+			UserName: userData.UserName,
+			Role:     userData.Role,
 		}, err
 	}
 
-	return &auth.LoginResponse{Id: userData.Id, UserName: user.UserName}, nil
+	return &auth.LoginResponse{Id: userData.Id, UserName: userData.UserName, Role: userData.Role}, nil
 }

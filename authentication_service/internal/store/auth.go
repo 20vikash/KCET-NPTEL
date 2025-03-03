@@ -56,11 +56,11 @@ func (a *AuthStore) LoginUser(ctx context.Context, email string, password string
 	err := a.db.QueryRow(ctx, sql, email).Scan(&userData.IsActivated)
 	if err != nil {
 		log.Println(err)
-		return &models.User{Id: -1, UserName: ""}, errors.New("no")
+		return &models.User{Id: -1, UserName: "", Role: ""}, errors.New("no")
 	}
 
 	if !userData.IsActivated {
-		return &models.User{Id: -1, UserName: ""}, errors.New("verify")
+		return &models.User{Id: -1, UserName: "", Role: ""}, errors.New("verify")
 	}
 
 	sql = "SELECT id, email, user_name, password_hash, is_activated, created_at FROM auth WHERE email=$1"
@@ -74,14 +74,14 @@ func (a *AuthStore) LoginUser(ctx context.Context, email string, password string
 	)
 	if err != nil {
 		log.Println(err)
-		return &models.User{Id: -1, UserName: ""}, err
+		return &models.User{Id: -1, UserName: "", Role: ""}, err
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(userData.Password), []byte(password))
 	if err != nil {
 		log.Println("Wrong password")
-		return &models.User{Id: -1, UserName: ""}, errors.New("wrong")
+		return &models.User{Id: -1, UserName: "", Role: ""}, errors.New("wrong")
 	}
 
-	return &models.User{Id: userData.Id, UserName: userData.UserName}, nil
+	return &models.User{Id: userData.Id, UserName: userData.UserName, Role: userData.Role}, nil
 }
