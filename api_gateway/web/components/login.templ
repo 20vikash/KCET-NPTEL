@@ -2,7 +2,7 @@ package web
 
 templ Login() {
     <div class="login-container">
-        <form hx-post="/login">
+        <form hx-post="/login" hx-ext="json-enc">
             <label>Username:</label>
             <input type="text" name="user_name" required>
             
