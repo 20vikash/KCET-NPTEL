@@ -25,7 +25,7 @@ func (app *Application) Hello(w http.ResponseWriter, r *http.Request) {
 func (app *Application) Logout(w http.ResponseWriter, r *http.Request) {
 	app.SessionManager.Destroy(r.Context())
 
-	web.Layout(web.Login()).Render(r.Context(), w)
+	w.Header().Set("HX-Redirect", "/")
 }
 
 func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
