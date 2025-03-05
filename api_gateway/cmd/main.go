@@ -7,6 +7,7 @@ import (
 
 	auth "gateway/grpc/client/auth"
 	video "gateway/grpc/client/video"
+	authorize "gateway/internal/auth"
 
 	"github.com/alexedwards/scs/redisstore"
 	"github.com/alexedwards/scs/v2"
@@ -18,6 +19,7 @@ type Application struct {
 	AuthService    auth.AuthServiceClient
 	VideoService   video.VideoUploadServiceClient
 	SessionManager *scs.SessionManager
+	Authorize      *authorize.Authorize
 }
 
 func main() {
@@ -38,6 +40,7 @@ func main() {
 		AuthService:    auth.ConnectToAuth(),
 		VideoService:   video.ConnectToVideo(),
 		SessionManager: sessionManager,
+		Authorize:      &authorize.Authorize{Session: sessionManager},
 	}
 
 	mux := app.handleRoutes()
