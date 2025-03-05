@@ -5,3 +5,9 @@ type User struct {
 	UserName string `json:"user_name"`
 	Password string `json:"password"`
 }
+
+type UserSession struct {
+	UserName string
+	Id       string
+	Role     string
+}
