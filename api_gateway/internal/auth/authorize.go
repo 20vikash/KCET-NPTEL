@@ -2,7 +2,6 @@ package authorize
 
 import (
 	"context"
-	model "gateway/models/auth"
 
 	"github.com/alexedwards/scs/v2"
 )
@@ -11,14 +10,22 @@ type Authorize struct {
 	Session *scs.SessionManager
 }
 
-func (a *Authorize) IsRole(ctx context.Context, role string) (*model.UserSession, bool) {
-	role_data := a.Session.Get(ctx, "role").(string)
-	user_name_data := a.Session.Get(ctx, "user_name").(string)
-	id_data := a.Session.Get(ctx, "id").(string)
+func (a *Authorize) IsAuthenticated(ctx context.Context) bool {
+	id_data := a.Session.GetInt(ctx, "id")
 
-	if role_data != role {
-		return &model.UserSession{}, false
-	}
+	return id_data != 0
+}
 
-	return &model.UserSession{UserName: user_name_data, Id: id_data, Role: role_data}, true
+func (a *Authorize) IsRole(ctx context.Context, role string) bool {
+	role_data := a.Session.GetString(ctx, "role")
+
+	return role_data == role
+}
+
+func (a *Authorize) GetId(ctx context.Context) int {
+	return a.Session.GetInt(ctx, "id")
+}
+
+func (a *Authorize) GetUserName(ctx context.Context) string {
+	return a.Session.GetString(ctx, "user_name")
 }
