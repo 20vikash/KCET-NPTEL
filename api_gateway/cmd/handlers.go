@@ -18,7 +18,7 @@ func (app *Application) Hello(w http.ResponseWriter, r *http.Request) {
 	if app.Authorize.IsAuthenticated(r.Context()) {
 		web.Layout(web.Home(app.Authorize.GetUserName(r.Context()))).Render(r.Context(), w)
 	} else {
-		web.Layout(web.Login()).Render(r.Context(), w)
+		web.Layout(web.Login("")).Render(r.Context(), w)
 	}
 }
 
@@ -50,7 +50,7 @@ func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
 	res, err := app.AuthService.LoginUser(ctx, userDetails)
 	if err != nil {
 		log.Println(err)
-		web.Layout(web.Login()).Render(r.Context(), w)
+		web.Layout(web.Login(err.Error())).Render(r.Context(), w)
 		return
 	}
 

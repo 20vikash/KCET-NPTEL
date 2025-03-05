@@ -1,6 +1,6 @@
 package web
 
-templ Login() {
+templ Login(message string) {
     <div class="login-container">
         <form hx-post="/login" hx-ext="json-enc">
             <label>Username:</label>
@@ -12,4 +12,6 @@ templ Login() {
             <button type="submit">Login</button>
         </form>
     </div>
+
+    <p>{message}</p>
 }
