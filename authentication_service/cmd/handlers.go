@@ -73,7 +73,7 @@ func (a *Application) VerifyUser(ctx context.Context, token *auth.Token) (*auth.
 }
 
 func (a *Application) LoginUser(ctx context.Context, user *auth.UserDetails) (*auth.LoginResponse, error) {
-	userData, err := a.Store.Auth.LoginUser(ctx, user.Email, user.Password)
+	userData, err := a.Store.Auth.LoginUser(ctx, user.UserName, user.Password)
 
 	if err != nil {
 		return &auth.LoginResponse{

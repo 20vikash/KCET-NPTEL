@@ -49,11 +49,11 @@ func (a *AuthStore) VerifyUser(ctx context.Context, email string) error {
 	return nil
 }
 
-func (a *AuthStore) LoginUser(ctx context.Context, email string, password string) (*models.User, error) {
-	sql := "SELECT is_activated FROM auth WHERE email=$1"
+func (a *AuthStore) LoginUser(ctx context.Context, user_name string, password string) (*models.User, error) {
+	sql := "SELECT is_activated FROM auth WHERE user_name=$1"
 	var userData models.User
 
-	err := a.db.QueryRow(ctx, sql, email).Scan(&userData.IsActivated)
+	err := a.db.QueryRow(ctx, sql, user_name).Scan(&userData.IsActivated)
 	if err != nil {
 		log.Println(err)
 		return &models.User{Id: -1, UserName: "", Role: ""}, errors.New("no")
@@ -63,8 +63,8 @@ func (a *AuthStore) LoginUser(ctx context.Context, email string, password string
 		return &models.User{Id: -1, UserName: "", Role: ""}, errors.New("verify")
 	}
 
-	sql = "SELECT id, email, user_name, password_hash, is_activated, created_at FROM auth WHERE email=$1"
-	err = a.db.QueryRow(ctx, sql, email).Scan(
+	sql = "SELECT id, email, user_name, password_hash, is_activated, role FROM auth WHERE user_name=$1"
+	err = a.db.QueryRow(ctx, sql, user_name).Scan(
 		&userData.Id,
 		&userData.Email,
 		&userData.UserName,

@@ -11,7 +11,7 @@ type Authorize struct {
 }
 
 func (a *Authorize) IsAuthenticated(ctx context.Context) bool {
-	id_data := a.Session.GetInt(ctx, "id")
+	id_data := a.Session.GetInt64(ctx, "id")
 
 	return id_data != 0
 }
@@ -22,8 +22,8 @@ func (a *Authorize) IsRole(ctx context.Context, role string) bool {
 	return role_data == role
 }
 
-func (a *Authorize) GetId(ctx context.Context) int {
-	return a.Session.GetInt(ctx, "id")
+func (a *Authorize) GetId(ctx context.Context) int64 {
+	return a.Session.GetInt64(ctx, "id")
 }
 
 func (a *Authorize) GetUserName(ctx context.Context) string {
