@@ -15,7 +15,11 @@ import (
 )
 
 func (app *Application) Hello(w http.ResponseWriter, r *http.Request) {
-	web.Layout(web.Login()).Render(context.Background(), w)
+	if app.Authorize.IsAuthenticated(r.Context()) {
+		web.Layout(web.Home(app.Authorize.GetUserName(r.Context()))).Render(r.Context(), w)
+	} else {
+		web.Layout(web.Login()).Render(r.Context(), w)
+	}
 }
 
 func (app *Application) Login(w http.ResponseWriter, r *http.Request) {
