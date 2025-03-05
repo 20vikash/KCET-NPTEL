@@ -2,4 +2,7 @@ package web
 
 templ Home(userName string) {
     <h1>Hello, {userName}</h1>
+    <form hx-post="/logout" hx-ext="json-enc">
+        <button type="submit">Logout</button>
+    </form>
 }

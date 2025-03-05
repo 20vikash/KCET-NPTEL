@@ -16,6 +16,7 @@ func (app *Application) handleRoutes() *chi.Mux {
 
 	r.Get("/", app.Hello)
 	r.Post("/login", app.Login)
+	r.Post("/logout", app.Logout)
 	r.Post("/upload", app.UploadVideo)
 	r.Post("/signup", app.CreateUser)
 	r.Get("/verify", app.VerifyUser)
