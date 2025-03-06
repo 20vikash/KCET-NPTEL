@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = "/course";
+
+package course;
+
+service CourseService {
+  rpc CreateCourse(CourseData) returns (CourseResponse);
+}
+
+message CourseData {
+  string name = 1;
+  string description = 2;
+}
+
+message CourseResponse {
+  string message = 1;
+}
