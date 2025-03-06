@@ -103,6 +103,19 @@ services:
       s3fs ${MINIO_BUCKET_NAME} /tmp/minio -o passwd_file=/etc/passwd-s3fs -o url=http://minio:9000 -o use_path_request_style &&
       go run ."
   
+  course_service:
+    image: golang:latest
+    container_name: course_service
+    privileged: true
+    volumes:
+      - ./course_service:/app/data:rw
+    networks:
+      - kk
+    expose:
+      - 5004
+    working_dir: /app/data/cmd
+    entrypoint: go run .
+  
   nginx:
     image: nginx:latest
     container_name: nginx_proxy
