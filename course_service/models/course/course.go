@@ -16,3 +16,9 @@ type Section struct {
 	SectionNumber int
 	Title         string
 }
+
+type Video struct {
+	SectionId int
+	Title     string
+	VideoURL  string
+}

@@ -43,5 +43,5 @@ CREATE TABLE video (
     section_id INTEGER REFERENCES section(id) ON DELETE CASCADE,
     title VARCHAR(100) NOT NULL,
     video_url TEXT NOT NULL,
-    duration INTEGER NOT NULL CHECK (duration > 0)
+    duration INTEGER CHECK (duration > 0)
 );

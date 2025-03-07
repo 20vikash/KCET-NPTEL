@@ -56,3 +56,15 @@ func (c *CourseStore) AddSection(ctx context.Context, section models.Section) er
 
 	return nil
 }
+
+func (c *CourseStore) AddVideo(ctx context.Context, video models.Video) error {
+	sql := "INSERT INTO video (section_id, title, video_url) VALUES ($1, $2, $3)"
+
+	_, err := c.db.Exec(ctx, sql, video.SectionId, video.Title, video.VideoURL)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	return nil
+}
