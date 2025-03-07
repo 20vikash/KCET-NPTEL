@@ -10,3 +10,9 @@ type Enrollment struct {
 	UserId   int
 	CourseId int
 }
+
+type Section struct {
+	CourseId      int
+	SectionNumber int
+	Title         string
+}
