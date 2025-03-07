@@ -9,7 +9,7 @@ import (
 
 type Store struct {
 	Course interface {
-		CreateCourse(ctx context.Context, course models.Course) bool
+		CreateCourse(ctx context.Context, course models.Course) error
 	}
 }
 
