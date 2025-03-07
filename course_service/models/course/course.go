@@ -5,3 +5,8 @@ type Course struct {
 	Description string
 	TeacherId   int
 }
+
+type Enrollment struct {
+	UserId   int
+	CourseId int
+}

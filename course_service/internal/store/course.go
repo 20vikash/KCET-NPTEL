@@ -32,3 +32,15 @@ func (c *CourseStore) CreateCourse(ctx context.Context, course models.Course) er
 
 	return nil
 }
+
+func (c *CourseStore) EnrollStudent(ctx context.Context, enrollment models.Enrollment) error {
+	sql := "INSERT INTO enrollment (user_id, course_id) VALUES ($1, $2)"
+
+	_, err := c.db.Exec(ctx, sql, enrollment.UserId, enrollment.CourseId)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	return nil
+}
