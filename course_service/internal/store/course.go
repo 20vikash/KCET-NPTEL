@@ -44,3 +44,15 @@ func (c *CourseStore) EnrollStudent(ctx context.Context, enrollment models.Enrol
 
 	return nil
 }
+
+func (c *CourseStore) AddSection(ctx context.Context, section models.Section) error {
+	sql := "INSERT INTO section (course_id, section_number, title) VALUES ($1, $2, $3)"
+
+	_, err := c.db.Exec(ctx, sql, section.CourseId, section.SectionNumber, section.Title)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	return nil
+}
